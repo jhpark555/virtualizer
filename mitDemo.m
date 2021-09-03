@@ -28,12 +28,12 @@ else
 
 
 % elevation 0,30,110,250,330,30,330
-fp = fopen('KEMAR\L0e250a.dat','r','ieee-be');
-	data1 = fread(fp, 256, 'short');
+fp = fopen('KEMAR\L0e330a.dat','r','ieee-be');
+	data1 = fread(fp, inf, 'short');
 	fclose(fp);
 
-fp = fopen('KEMAR\R0e250a.dat','r','ieee-be');
-	data2 = fread(fp, 256, 'short');
+fp = fopen('KEMAR\R0e110a.dat','r','ieee-be');
+	data2 = fread(fp, inf, 'short');
 	fclose(fp);
 
 	leftimp = data1(1:2:256);
@@ -52,7 +52,10 @@ end
 
 %wav_file_name='InputWav\es01.wav';
 wav_file_name='out(u2)2048_L_in_music.wav';
-[wav_data fs]=audioread(wav_file_name);
+[wav_data1 fs]=audioread(wav_file_name);
+
+wav_file_name='out(u2)2048_R_in_music.wav';
+[wav_data2 fs]=audioread(wav_file_name);
 
 % decimation order optimze 
 %M=2;
@@ -94,14 +97,13 @@ title 'Input Impulse Response'
 %======================
 
 
-binarual_l=filter(hrtf_l,1,wav_data);   % normal FIR
-binarual_r=filter(hrtf_r,1,wav_data);   % FIR
+binarual_l=filter(hrtf_l,1,wav_data1);   % normal FIR
+binarual_r=filter(hrtf_r,1,wav_data2);   % FIR
 
 %binarual_l=filter(bl,al,wav_data);   %prony  IIR
 %binarual_r=filter(br,ar,wav_data);   %prony  IIR
 
 binarual_output=[binarual_l binarual_r];
-
-output_wav_file='es01_point_binarual.wav';
+output_wav_file='LR_ch.wav';
 audiowrite(output_wav_file,binarual_output,fs);
 
