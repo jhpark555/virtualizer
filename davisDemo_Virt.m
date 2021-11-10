@@ -31,8 +31,8 @@ clc;
 
 
 azimuth_cipic = [-80 -65 -55 -45:5:45 55 65 80];%azimuth(13)==0 
-azimuthL=-80;    % for the left surround
-azimuthR=80;
+azimuthL=-55;    % for the left surround
+azimuthR=55;
 %azimuth=80;      % for the right surround
 azimuth_indexL=find(azimuth_cipic==azimuthL);
 azimuth_indexR=find(azimuth_cipic==azimuthR);

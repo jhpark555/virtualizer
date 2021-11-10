@@ -11,11 +11,13 @@ clc;
 
 
 full=0;     % 1 is wav file format , 0 is full model type.
+
 if full==1
    %[x,Fs]=audioread('mit\elev0\H0e090a.wav');       % 128 taps compact
     
-   [x1,Fs]=audioread('full\elev0\L0e005a.wav');     % in case full model 512 taps
-   [x2,Fs]=audioread('full\elev0\R0e220a.wav');
+   [x1,Fs]=audioread('full\elev0\L0e045a.wav');     % in case full model 512 taps
+   [x2,Fs]=audioread('full\elev0\R0e300a.wav');
+  
    x1=x1(1:2:512);   % to reduce samples
    x2=x2(2:2:512);   % to reduce samples 
    x(:,1)=x1;
@@ -70,18 +72,18 @@ t=1:length(hrtf_l);
 t=t/fs;
 plot(t,hrtf_l,'b',t,hrtf_r,'r'); grid on;
 xlabel('samples: b:left,r:right , Time(sec)');
-title('Source at 80 degree');
+title('FIR impulse');
 
 figure;
 [Hl,Fl]=freqz(hrtf_l,1,length(hrtf_l),fs);
 [Hr,Fr]=freqz(hrtf_r,1,length(hrtf_r),fs);
 semilogx(Fl,mag2db(abs(Hl)),'b',Fr,mag2db(abs(Hr)),'r'); grid on;
 xlabel('Freq(Hz)');
-title('Source at 80 degree');
+title(' FIR');
 
 %===========Prony method IIR   50order is good , less than 50 is poor.
-bord = 15;
-aord = 15;
+bord = 25;
+aord = 25;
 ImpL=impz(hrtf_l,1);
 ImpR=impz(hrtf_r,1);
 [bl,al]= prony(ImpL,bord,aord);
@@ -94,14 +96,22 @@ title 'Impulse Response with Prony Design'
 subplot(2,1,2)
 stem(hrtf_l)
 title 'Input Impulse Response'
+
+figure;
+[Hl,Fl]=freqz(ImpL,1,length(hrtf_l),fs);
+[Hr,Fr]=freqz(ImpR,1,length(hrtf_r),fs);
+semilogx(Fl,mag2db(abs(Hl)),'b',Fr,mag2db(abs(Hr)),'r'); grid on;
+xlabel('Freq(Hz)');
+title(' Prony');
+
 %======================
 
 
-binarual_l=filter(hrtf_l,1,wav_data1);   % normal FIR
-binarual_r=filter(hrtf_r,1,wav_data2);   % FIR
+%binarual_l=filter(hrtf_l,1,wav_data1);   % normal FIR
+%binarual_r=filter(hrtf_r,1,wav_data2);   % FIR
 
-%binarual_l=filter(bl,al,wav_data);   %prony  IIR
-%binarual_r=filter(br,ar,wav_data);   %prony  IIR
+binarual_l=filter(bl,al,wav_data1);   %prony  IIR
+binarual_r=filter(br,ar,wav_data2);   %prony  IIR
 
 binarual_output=[binarual_l binarual_r];
 output_wav_file='LR_ch.wav';

@@ -2,7 +2,7 @@ function [y]=mit_hrtf_get(azimuth,elevation)
 
 
 if nargin < 1   
-   azimuth=120;        % define azimuth and elevation 
+   azimuth=45;        % define azimuth and elevation 
    elevation=15;
    fprintf("Argment error : default azimuth=%d elevation=%d\n",azimuth,elevation);
 end 
@@ -263,6 +263,7 @@ end
         
         end
     
+        save('firdata.mat','H0e045aleft','H0e045aright');
  %function y = mit_hrtf_get()
  
     localAzimuth=azimuth;
@@ -396,7 +397,7 @@ end
                         pLeftTaps = e10left;
                         pRightTaps = e10right;
             case 20    
-                %fprintf("localAzimuth= %d \n",localAzimuth);
+                fprintf("localAzimuth= %d \n",localAzimuth);
                   switch (localAzimuth)
                     case 0
                         pLeftTaps = H0e000aleft;
@@ -707,7 +708,7 @@ end
     save('hrtf.mat','hrtf_l','hrtf_r');
     
     %wav_file_name='InputWav\es01.wav';
-wav_file_name='out(u2)2048_L_in_movie.wav';
+wav_file_name='out(u2)2048_R_in_movie.wav';
 [wav_data fs]=audioread(wav_file_name);
 
 figure;
